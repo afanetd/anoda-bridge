@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./node_modules/@altv"],
+
+    "paths": {
+      "alt-server": ["./node_modules/@altv/types-server"],
+      "alt-client": ["./node_modules/@altv/types-client"],
+      "alt-shared": ["./node_modules/@altv/types-shared"]
+    }
+  },
+  "include": ["src/**/*"]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "bridge",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@altv/types-server": "^16.6.0",
+    "@altv/types-shared": "^16.6.0",
+    "@types/node": "^25.1.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "redis": "^5.10.0"
+  }
+}
