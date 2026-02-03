@@ -1,3 +1,9 @@
 type = "js"
-main = "dist/index.js"
-client-main = "dist/client.js"
+main = "dist/server/index.js"
+client-main = "dist/client/ShowLogin.js"
+
+client-files = [
+  "dist/client/*",
+  "dist/client/*.html",
+  "dist/client/html/*" 
+]

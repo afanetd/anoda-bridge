@@ -10,6 +10,8 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@altv/types-client": "^16.6.0",
+    "@altv/types-natives": "^16.2.1",
     "@altv/types-server": "^16.6.0",
     "@altv/types-shared": "^16.6.0",
     "@types/node": "^25.1.0",
