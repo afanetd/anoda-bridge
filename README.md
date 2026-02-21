@@ -1,8 +1,8 @@
-# Anoda Bridge | Alt:V TypeScript Adapter
+# Anoda Bridge | FiveM TypeScript Adapter
 
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue) ![Alt:V](https://img.shields.io/badge/Alt:V-Client%20%26%20Server-orange) ![Node.js](https://img.shields.io/badge/Runtime-Node.js-green) ![License](https://img.shields.io/badge/License-MIT-green)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue) ![FiveM](https://img.shields.io/badge/Alt:V-Client%20%26%20Server-orange) ![Node.js](https://img.shields.io/badge/Runtime-Node.js-green) ![License](https://img.shields.io/badge/License-MIT-green)
 
-**Anoda Bridge** is the communication layer (Adapter) for the game server, running within the **alt:V** environment.
+**Anoda Bridge** is the communication layer (Adapter) for the game server, running within the **FiveM** environment.
 Its primary role is to act as the system's "hands": it makes no business decisions but acts as a bridge, translating game events to **Anoda Core** (Java) and executing incoming commands.
 
 ## 🔗 How It Works
@@ -14,7 +14,7 @@ This service operates as a "dumb terminal" or a stateless client:
 ## 🛠 Tech Stack
 
 * **Language:** TypeScript
-* **Platform:** Node.js (Server-side Alt:V)
+* **Platform:** Node.js (Server-side FiveM)
 * **Communication:** Redis Client (Pub/Sub)
 * **Build Tool:** `tsc` (TypeScript Compiler)
 
