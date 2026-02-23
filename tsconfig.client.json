@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "types": ["@citizenfx/client"],
+    "module": "CommonJS",
+    "outDir": "./dist/client",
+    "rootDir": "./src/client",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/client/**/*"]
+}

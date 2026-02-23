@@ -1,0 +1,23 @@
+{
+  "name": "bridge",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p tsconfig.server.json && tsc -p tsconfig.client.json",
+    "watch": "tsc -p tsconfig.server.json -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@citizenfx/client": "^2.0.25988-1",
+    "@citizenfx/server": "^2.0.25988-1",
+    "@types/node": "^25.1.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "redis": "^5.10.0"
+  }
+}
