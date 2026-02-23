@@ -3,7 +3,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue) ![FiveM](https://img.shields.io/badge/FiveM-Client%20%26%20Server-orange) ![Node.js](https://img.shields.io/badge/Runtime-Node.js-green) ![License](https://img.shields.io/badge/License-MIT-green)
 
 **Anoda Bridge** is the communication layer (Adapter) for the game server, running within the **FiveM** environment.
-Its primary role is to act as the system's "hands": it makes no business decisions but acts as a bridge, translating game events to **Anoda Core** (Java) and executing incoming commands.
+Its primary role is to act as the system's "hands": it makes no business decisions but acts as a bridge, translating game events to [Anoda Core](https://github.com/afanetd/anoda-core) (Java) and executing incoming commands.
 
 ## 🔗 How It Works
 
