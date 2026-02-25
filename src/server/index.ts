@@ -9,6 +9,19 @@ interface JavaCommand {
     data: string;
 }
 
+interface PlayerSyncData {
+    accountId: number;
+    health: number;
+    armor: number;
+    money: number;
+    bankMoney: number;
+    lastX: number;
+    lastY: number;
+    lastZ: number;
+}
+
+const playerData = new Map<number, PlayerSyncData>();
+
 (async () => {
     await pub.connect();
     await sub.connect();
@@ -22,7 +35,6 @@ interface JavaCommand {
             if (cmd.action === 'AUTH_SUCCESS') {
                 const response = JSON.parse(cmd.data);
                 console.log(`[Bridge] AUTH_SUCCESS для: ${response.playerHandle}`);
-                console.log(`[Bridge] Игроки онлайн: ${getPlayers().map(p => GetPlayerName(p)).join(', ')}`);
 
                 const players = getPlayers();
                 for (const playerSrc of players) {
@@ -30,8 +42,19 @@ interface JavaCommand {
                     if (name === response.playerHandle) {
                         console.log(`[Bridge] Нашли игрока! Отправляем auth:success`);
                         const srcNum = Number(playerSrc);
-                        console.log(`[Bridge] src: ${playerSrc}, num: ${srcNum}`);
                         TriggerClientEvent('auth:success', srcNum, response.characterData);
+
+                        playerData.set(srcNum, {
+                            accountId: response.characterData.accountId,
+                            health: response.characterData.health,
+                            armor: response.characterData.armor,
+                            money: response.characterData.money,
+                            bankMoney: response.characterData.bankMoney,
+                            lastX: response.characterData.lastX,
+                            lastY: response.characterData.lastY,
+                            lastZ: response.characterData.lastZ,
+                        });
+
                         break;
                     }
                 }
@@ -40,7 +63,6 @@ interface JavaCommand {
             if (cmd.action === 'AUTH_ERROR') {
                 const errorInfo = JSON.parse(cmd.data);
                 const players = getPlayers();
-
                 for (const playerSrc of players) {
                     if (GetPlayerName(playerSrc) === errorInfo.username) {
                         TriggerClientEvent('auth:error', parseInt(playerSrc), errorInfo.reason);
@@ -48,6 +70,7 @@ interface JavaCommand {
                     }
                 }
             }
+
         } catch (err) {
             console.error('Ошибка обработки пакета от Java:', err);
         }
@@ -59,6 +82,46 @@ on('playerConnecting', (name: string, setKickReason: Function, deferrals: any) =
     deferrals.done();
 });
 
+onNet('player:sync', (data: PlayerSyncData) => {
+    const src = (global as any).source;
+    const existing = playerData.get(src);
+
+    if (existing) {
+        playerData.set(src, { ...existing, ...data });
+    }
+});
+
+RegisterCommand('save', (source: number) => {
+    const data = playerData.get(source);
+    if (data && pub.isOpen) {
+        pub.publish('game_events', JSON.stringify({
+            cmd: 'save_player',
+            player: GetPlayerName(String(source)),
+            data: JSON.stringify(data)
+        }));
+        console.log(`[Bridge] Принудительное сохранение для ${GetPlayerName(String(source))}`);
+    }
+}, false);
+
+on('playerDropped', async () => {
+    const src = (global as any).source;
+    const data = playerData.get(src);
+
+    if (data) {
+        console.log(`[Bridge] Сохраняем данные игрока ${GetPlayerName(String(src))} при выходе`);
+
+        if (pub.isOpen) {
+            await pub.publish('game_events', JSON.stringify({
+                cmd: 'save_player',
+                player: GetPlayerName(String(src)),
+                data: JSON.stringify(data)
+            }));
+        }
+
+        playerData.delete(src);
+    }
+});
+
 onNet('auth:request_register', async (username: string, password: string, isRegister: boolean) => {
     const src = (global as any).source;
 
@@ -68,20 +131,17 @@ onNet('auth:request_register', async (username: string, password: string, isRegi
     const licenseId = GetPlayerIdentifier(src, 'license') ?? 'unknown';
 
     const playerName = GetPlayerName(src as any);
-
     const command = isRegister ? 'register' : 'login';
-
-    const registrationData = {
-        username,
-        password,
-        socialClubId: licenseId,
-        hardwareId: steamId,
-    };
 
     const payload = JSON.stringify({
         cmd: command,
         player: playerName,
-        data: JSON.stringify(registrationData),
+        data: JSON.stringify({
+            username,
+            password,
+            socialClubId: licenseId,
+            hardwareId: steamId,
+        }),
     });
 
     if (pub.isOpen) {

@@ -57,23 +57,32 @@ onNet('auth:success', async (stats: any) => {
         FreezeEntityPosition(ped, false);
         SetPlayerControl(PlayerId(), true, 0);
 
-// Сбрасываем все камеры
         RenderScriptCams(false, false, 0, true, false);
 
-// Переключаем на третье лицо
         SetFollowPedCamViewMode(1);
 
-// Делаем ped видимым для всех
         SetEntityVisible(ped, true, false);
         ResetEntityAlpha(ped);
 
-// Принудительно обновляем компоненты модели
         SetPedDefaultComponentVariation(ped);
 
         DisplayRadar(true);
         DisplayHud(true);
     });
 });
+
+setInterval(() => {
+    const ped = PlayerPedId();
+    const [x, y, z] = GetEntityCoords(ped, true);
+
+    emitNet('player:sync', {
+        health: GetEntityHealth(ped),
+        armor: GetPedArmour(ped),
+        lastX: x,
+        lastY: y,
+        lastZ: z,
+    });
+}, 10000);
 
 onNet('auth:error', (reason: string) => {
     SendNUIMessage({ type: 'auth_error', reason });
