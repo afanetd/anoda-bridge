@@ -18,6 +18,13 @@ This service operates as a "dumb terminal" or a stateless client:
 * **Communication:** Redis Client (Pub/Sub)
 * **Build Tool:** `tsc` (TypeScript Compiler)
 
+## 📦 Resources
+
+| Resource | Description |
+|----------|-------------|
+| [anoda-bridge](anoda-bridge) | Core bridge — Redis communication, player sync, save on disconnect |
+| [anoda-auth](anoda-auth) | Authentication module — login, register, NUI interface |
+
 ## 🚀 Installation & Setup
 
 1.  Install dependencies:
@@ -29,6 +36,12 @@ This service operates as a "dumb terminal" or a stateless client:
     ```bash
     npx tsc
     ```
+    
+    or
+    
+    ```bash
+    npm run build
+    ```
     *(Or use `npx tsc -w` for auto-compilation during development)*
 
-3.  Ensure your `resource.toml` points to the compiled file: `dist/index.js`.
+4.  Ensure your `fxmanifest.lua` points to the compiled file: `dist/index.js`.
