@@ -25,6 +25,14 @@ This service operates as a "dumb terminal" or a stateless client:
 | [anoda-bridge](anoda-bridge) | Core bridge — Redis communication, player sync, save on disconnect |
 | [anoda-auth](anoda-auth) | Authentication module — login, register, NUI interface |
 
+## 📋 Dependencies
+
+| Dependency | Description |
+|------------|-------------|
+| spawnmanager | Built-in FiveM resource, handles player spawning |
+| Redis | Message broker between FiveM and Java Core |
+| PostgreSQL | Default database (any Hibernate-compatible DB supported) |
+
 ## 🚀 Installation & Setup
 
 1.  Install dependencies:
