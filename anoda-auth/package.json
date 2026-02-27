@@ -1,0 +1,14 @@
+{
+  "name": "anoda-auth",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc -p tsconfig.server.json && tsc -p tsconfig.client.json",
+    "watch": "tsc -p tsconfig.server.json -w"
+  },
+  "devDependencies": {
+    "@citizenfx/client": "^2.0.25988-1",
+    "@citizenfx/server": "^2.0.25988-1",
+    "@types/node": "^25.1.0",
+    "typescript": "^5.9.3"
+  }
+}

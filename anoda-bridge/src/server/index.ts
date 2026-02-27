@@ -34,27 +34,12 @@ const playerData = new Map<number, PlayerSyncData>();
 
             if (cmd.action === 'AUTH_SUCCESS') {
                 const response = JSON.parse(cmd.data);
-                console.log(`[Bridge] AUTH_SUCCESS для: ${response.playerHandle}`);
-
                 const players = getPlayers();
                 for (const playerSrc of players) {
-                    const name = GetPlayerName(playerSrc);
-                    if (name === response.playerHandle) {
-                        console.log(`[Bridge] Нашли игрока! Отправляем auth:success`);
+                    if (GetPlayerName(playerSrc) === response.playerHandle) {
                         const srcNum = Number(playerSrc);
-                        TriggerClientEvent('auth:success', srcNum, response.characterData);
-
-                        playerData.set(srcNum, {
-                            accountId: response.characterData.accountId,
-                            health: response.characterData.health,
-                            armor: response.characterData.armor,
-                            money: response.characterData.money,
-                            bankMoney: response.characterData.bankMoney,
-                            lastX: response.characterData.lastX,
-                            lastY: response.characterData.lastY,
-                            lastZ: response.characterData.lastZ,
-                        });
-
+                        playerData.set(srcNum, response.characterData);
+                        emit('bridge:AUTH_SUCCESS', srcNum, response.characterData);
                         break;
                     }
                 }
@@ -65,7 +50,7 @@ const playerData = new Map<number, PlayerSyncData>();
                 const players = getPlayers();
                 for (const playerSrc of players) {
                     if (GetPlayerName(playerSrc) === errorInfo.username) {
-                        TriggerClientEvent('auth:error', parseInt(playerSrc), errorInfo.reason);
+                        emit('bridge:AUTH_ERROR', Number(playerSrc), errorInfo.reason);
                         break;
                     }
                 }
@@ -91,18 +76,6 @@ onNet('player:sync', (data: PlayerSyncData) => {
     }
 });
 
-RegisterCommand('save', (source: number) => {
-    const data = playerData.get(source);
-    if (data && pub.isOpen) {
-        pub.publish('game_events', JSON.stringify({
-            cmd: 'save_player',
-            player: GetPlayerName(String(source)),
-            data: JSON.stringify(data)
-        }));
-        console.log(`[Bridge] Принудительное сохранение для ${GetPlayerName(String(source))}`);
-    }
-}, false);
-
 on('playerDropped', async () => {
     const src = (global as any).source;
     const data = playerData.get(src);
@@ -122,29 +95,8 @@ on('playerDropped', async () => {
     }
 });
 
-onNet('auth:request_register', async (username: string, password: string, isRegister: boolean) => {
-    const src = (global as any).source;
-
-    // @ts-ignore
-    const steamId = GetPlayerIdentifier(src, 'steam') ?? 'unknown';
-    // @ts-ignore
-    const licenseId = GetPlayerIdentifier(src, 'license') ?? 'unknown';
-
-    const playerName = GetPlayerName(src as any);
-    const command = isRegister ? 'register' : 'login';
-
-    const payload = JSON.stringify({
-        cmd: command,
-        player: playerName,
-        data: JSON.stringify({
-            username,
-            password,
-            socialClubId: licenseId,
-            hardwareId: steamId,
-        }),
-    });
-
+exports('publish', async (channel: string, data: string) => {
     if (pub.isOpen) {
-        await pub.publish('game_events', payload);
+        await pub.publish(channel, data);
     }
 });

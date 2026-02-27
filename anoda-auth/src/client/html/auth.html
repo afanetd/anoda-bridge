@@ -99,7 +99,7 @@
             submitBtn.disabled = true;
             submitBtn.innerText = "ОБРАБОТКА...";
 
-            fetch(`https://anoda-bridge/submit_login`, {
+            fetch(`https://anoda-auth/submit_login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -124,6 +124,10 @@
 
         window.addEventListener('message', (event) => {
             const data = event.data;
+
+            if (data.type === 'close') {
+                document.body.style.display = 'none';
+            }
 
             if (data.type === 'auth_error') {
                 showError(data.reason);
